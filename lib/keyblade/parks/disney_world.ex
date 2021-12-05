@@ -24,8 +24,11 @@ defmodule Keyblade.Parks.DisneyWorld do
       message = build_sms_message(query_results)
 
       if message != "" do
+        Logger.info("Sending available reservations SMS")
         Keyblade.SMS.send(message)
       end
+    else
+      Logger.info("No available reservations found")
     end
   end
 
@@ -43,6 +46,7 @@ defmodule Keyblade.Parks.DisneyWorld do
   end
 
   defp run_queries(queries) do
+    Logger.info("Running queries")
     Enum.flat_map(queries, &run_query/1)
   end
 
@@ -54,6 +58,7 @@ defmodule Keyblade.Parks.DisneyWorld do
   end
 
   def build_initial_queries(search_params) do
+    Logger.info("Building queries")
     date_range = Date.range(search_params.start_date, search_params.end_date)
     party_range = search_params.party_size_min..search_params.party_size_max
 
