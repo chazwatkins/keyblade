@@ -1,7 +1,10 @@
 defmodule Keyblade.Parks.DisneyWorld do
-  @base_api_url "https://disneyworld.disney.go.com/finder/api/v1/explorer-service/dining-availability/%7B1C0595C5-9A52-49D8-8B20-5C0DE85489BA%7D/wdw"
+  require Logger
 
   defstruct []
+
+  @base_api_url "https://disneyworld.disney.go.com/finder/api/v1/explorer-service/dining-availability/%7B1C0595C5-9A52-49D8-8B20-5C0DE85489BA%7D/wdw"
+  @timeout 30_000
 
   alias __MODULE__
   alias Keyblade.Parks.QueryParams
@@ -47,14 +50,27 @@ defmodule Keyblade.Parks.DisneyWorld do
 
   defp run_queries(queries) do
     Logger.info("Running queries")
-    Enum.flat_map(queries, &run_query/1)
+
+    queries
+    |> Task.async_stream(&run_query/1, timeout: @timeout)
+    |> Stream.filter(&match?({:ok, _}, &1))
+    |> Stream.flat_map(fn {:ok, result} -> result end)
+    |> Enum.to_list()
+  end
+
+  defp process_body(body) when is_map(body) do
+    Map.get(body, "offers", [])
+  end
+
+  defp process_body(_body) do
+    []
   end
 
   defp run_query(query) do
     query
-    |> Req.get!()
+    |> Req.get!(receive_timeout: @timeout)
     |> Map.get(:body)
-    |> Map.get("offers", [])
+    |> process_body()
   end
 
   def build_initial_queries(search_params) do

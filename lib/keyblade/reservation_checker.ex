@@ -1,5 +1,6 @@
 defmodule Keyblade.ReservationChecker do
   use GenServer
+  require Logger
 
   alias Keyblade.Parks.DisneyWorld
   alias Keyblade.Reservations.SearchParams
@@ -35,6 +36,6 @@ defmodule Keyblade.ReservationChecker do
 
   def schedule_work do
     Logger.info("Next reservation check scheduled")
-    Process.send_after(self(), :check_reservations, :timer.minutes(30))
+    Process.send_after(self(), :check_reservations, :timer.minutes(15))
   end
 end
