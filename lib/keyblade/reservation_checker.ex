@@ -36,6 +36,6 @@ defmodule Keyblade.ReservationChecker do
 
   def schedule_work do
     IO.puts("Scheduling next reservation check")
-    Process.send_after(self(), :check_reservations, :timer.hours(1))
+    Process.send_after(self(), :check_reservations, :timer.minutes(30))
   end
 end
