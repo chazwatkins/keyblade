@@ -5,7 +5,8 @@ defmodule Keyblade.Reservations.SearchParams do
     :start_time,
     :end_time,
     :party_size_min,
-    :party_size_max
+    :party_size_max,
+    :restaurant_id
   ]
 
   @enforce_keys @fields

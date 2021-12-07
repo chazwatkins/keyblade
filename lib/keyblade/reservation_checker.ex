@@ -3,18 +3,8 @@ defmodule Keyblade.ReservationChecker do
   require Logger
 
   alias Keyblade.Parks.DisneyWorld
-  alias Keyblade.Reservations.SearchParams
 
-  def start_link(_arg) do
-    search_params = %SearchParams{
-      start_date: Date.new!(2022, 01, 13),
-      end_date: Date.new!(2022, 01, 18),
-      start_time: Time.new!(15, 30, 0),
-      end_time: Time.new!(21, 15, 0),
-      party_size_min: 4,
-      party_size_max: 8
-    }
-
+  def start_link(search_params) do
     GenServer.start_link(__MODULE__, search_params)
   end
 
@@ -26,9 +16,9 @@ defmodule Keyblade.ReservationChecker do
 
   @impl true
   def handle_info(:check_reservations, search_params) do
-    Logger.info("Checking for reservations")
+    Logger.info("Checking reservations for #{search_params.restaurant_id}")
     Keyblade.check_for_available_reservations(%DisneyWorld{}, search_params)
-    Logger.info("Finished checking for reservations")
+    Logger.info("Finished checking reservations for #{search_params.restaurant_id}")
 
     schedule_work()
     {:noreply, search_params}

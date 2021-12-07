@@ -4,7 +4,7 @@ defmodule Keyblade.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      Keyblade.ReservationChecker
+      Keyblade.ReservationSupervisor
     ]
 
     opts = [strategy: :one_for_one, name: Keyblade.Supervisor]

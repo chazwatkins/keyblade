@@ -74,7 +74,7 @@ defmodule Keyblade.Parks.DisneyWorld do
   end
 
   def build_initial_queries(search_params) do
-    Logger.info("Building queries")
+    Logger.info("Building queries for restaurant #{search_params.restaurant_id}")
     date_range = Date.range(search_params.start_date, search_params.end_date)
     party_range = search_params.party_size_min..search_params.party_size_max
 
@@ -92,7 +92,7 @@ defmodule Keyblade.Parks.DisneyWorld do
       for time <- time_interval do
         query_params =
           QueryParams.new(%{
-            restaurant_id: 90_002_606,
+            restaurant_id: search_params.restaurant_id,
             party_size: party_size,
             date: Date.to_string(date),
             time: Timex.format!(time, "%H:%M:%S", :strftime)
