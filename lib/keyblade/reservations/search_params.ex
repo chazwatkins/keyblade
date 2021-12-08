@@ -13,8 +13,7 @@ defmodule Keyblade.Reservations.SearchParams do
 
   @optional_fields [
     :restaurant_name,
-    :queries,
-    :reservation_times
+    queries: []
   ]
 
   @enforce_keys @required_fields

@@ -1,5 +1,8 @@
 defmodule Keyblade.SMS do
+  require Logger
+
   def send(message, notify_number) do
+    Logger.info("Sending available reservations SMS")
     SmsBlitz.send_sms(:nexmo, from: from_number(), to: notify_number, message: message)
   end
 
