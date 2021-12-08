@@ -22,23 +22,29 @@ defmodule Keyblade.Parks.DisneyWorld do
     |> maybe_send_sms()
   end
 
-  def maybe_send_sms(query_results) do
-    if(query_results != []) do
-      message = build_sms_message(query_results)
+  def maybe_send_sms(%{
+        reservation_times: reservation_times,
+        restaurant_name: name,
+        notify_number: notify_number
+      }) do
+    if(reservation_times != []) do
+      Logger.info("Sending available reservations SMS")
 
-      if message != "" do
-        Logger.info("Sending available reservations SMS")
-        Keyblade.SMS.send(message)
-      end
+      reservation_times
+      |> build_sms_message(name)
+      |> Keyblade.SMS.send(notify_number)
     else
       Logger.info("No available reservations found")
     end
   end
 
-  def build_sms_message(query_results) do
-    query_results
-    |> Enum.map(&datetime_to_formatted_string/1)
-    |> Enum.join("\n")
+  def build_sms_message(reservation_times, restaurant_name) do
+    schedule_string =
+      reservation_times
+      |> Enum.map(&datetime_to_formatted_string/1)
+      |> Enum.join("\n")
+
+    restaurant_name <> "\n\n" <> schedule_string
   end
 
   def datetime_to_formatted_string(%{"dateTime" => datetime}) do
@@ -48,7 +54,7 @@ defmodule Keyblade.Parks.DisneyWorld do
     "#{date} @ #{hour}:#{parsed_datetime.minute} #{time_of_day}"
   end
 
-  defp run_queries(queries) do
+  defp run_queries(%{queries: queries} = search_params) do
     Logger.info("Running queries")
 
     queries
@@ -56,6 +62,7 @@ defmodule Keyblade.Parks.DisneyWorld do
     |> Stream.filter(&match?({:ok, _}, &1))
     |> Stream.flat_map(fn {:ok, result} -> result end)
     |> Enum.to_list()
+    |> then(&Map.put(search_params, :reservation_times, &1))
   end
 
   defp process_body(body) when is_map(body) do
@@ -102,6 +109,7 @@ defmodule Keyblade.Parks.DisneyWorld do
       end
     end
     |> List.flatten()
+    |> then(&Map.put(search_params, :queries, &1))
   end
 
   defp build_query(query_params) do

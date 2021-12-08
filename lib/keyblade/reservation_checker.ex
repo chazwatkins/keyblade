@@ -16,16 +16,23 @@ defmodule Keyblade.ReservationChecker do
 
   @impl true
   def handle_info(:check_reservations, search_params) do
+    search_params =
+      search_params
+      |> Map.put(:queries, [])
+      |> Map.put(:reservation_times, [])
+
     Logger.info("Checking reservations for #{search_params.restaurant_id}")
     Keyblade.check_for_available_reservations(%DisneyWorld{}, search_params)
     Logger.info("Finished checking reservations for #{search_params.restaurant_id}")
 
-    schedule_work()
+    schedule_work(search_params)
     {:noreply, search_params}
   end
 
-  def schedule_work do
-    Logger.info("Next reservation check scheduled")
-    Process.send_after(self(), :check_reservations, :timer.minutes(15))
+  def schedule_work(%{interval: interval, restaurant_id: restaurant_id}) do
+    Logger.info("Next reservation check scheduled for #{restaurant_id}")
+
+    next_interval_timer = apply(:timer, interval.measure, [interval.length])
+    Process.send_after(self(), :check_reservations, next_interval_timer)
   end
 end
