@@ -3,6 +3,7 @@ defmodule Keyblade.ReservationChecker do
   require Logger
 
   alias Keyblade.Parks.DisneyWorld
+  alias Keyblade.Reservations.SearchParams
 
   def start_link(search_params) do
     GenServer.start_link(__MODULE__, search_params)
@@ -29,7 +30,7 @@ defmodule Keyblade.ReservationChecker do
     {:noreply, search_params}
   end
 
-  def schedule_work(%{interval: interval, restaurant_id: restaurant_id}) do
+  def schedule_work(%SearchParams{interval: interval, restaurant_id: restaurant_id}) do
     Logger.info("Next reservation check scheduled for #{restaurant_id}")
 
     next_interval_timer = apply(:timer, interval.measure, [interval.length])
