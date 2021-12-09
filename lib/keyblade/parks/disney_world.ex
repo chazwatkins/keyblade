@@ -80,12 +80,17 @@ defmodule Keyblade.Parks.DisneyWorld do
     case Regulator.ask(:disney_world_service) do
       {:ok, token} ->
         try do
-          response = Req.get!(query_string, receive_timeout: @timeout)
-          :ok = Regulator.ok(token)
+          case Req.get!(query_string, receive_timeout: @timeout) do
+            %Req.Response{status: 200} = response ->
+              :ok = Regulator.ok(token)
 
-          response
-          |> get_offers()
-          |> add_reservation_times(query)
+              response
+              |> get_offers()
+              |> add_reservation_times(query)
+
+            _ ->
+              Regulator.error(token)
+          end
         rescue
           error ->
             Regulator.error(token)
