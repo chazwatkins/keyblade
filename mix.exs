@@ -15,7 +15,7 @@ defmodule Keyblade.MixProject do
   def application do
     [
       mod: {Keyblade.Application, []},
-      applications: [:req, :timex, :sms_blitz, :regulator],
+      applications: [:req, :timex, :sms_blitz],
       extra_applications: [:logger]
     ]
   end
@@ -27,8 +27,7 @@ defmodule Keyblade.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
       {:req, "~> 0.2"},
       {:timex, "~> 3.7"},
-      {:sms_blitz, "~> 0.1.1"},
-      {:regulator, "~> 0.4.1"}
+      {:sms_blitz, "~> 0.1.1"}
     ]
   end
 end

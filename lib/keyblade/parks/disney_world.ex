@@ -77,29 +77,10 @@ defmodule Keyblade.Parks.DisneyWorld do
   end
 
   defp run_query(%Query{query_string: query_string} = query) do
-    case Regulator.ask(:disney_world_service) do
-      {:ok, token} ->
-        try do
-          case Req.get!(query_string, receive_timeout: @timeout) do
-            %Req.Response{status: 200} = response ->
-              :ok = Regulator.ok(token)
-
-              response
-              |> get_offers()
-              |> add_reservation_times(query)
-
-            _ ->
-              Regulator.error(token)
-          end
-        rescue
-          error ->
-            Regulator.error(token)
-            reraise error, __STACKTRACE__
-        end
-
-      :dropped ->
-        query
-    end
+    query_string
+    |> Req.get!(receive_timeout: @timeout)
+    |> get_offers()
+    |> add_reservation_times(query)
   end
 
   defp add_reservation_times(
