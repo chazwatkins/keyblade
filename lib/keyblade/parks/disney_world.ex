@@ -68,7 +68,7 @@ defmodule Keyblade.Parks.DisneyWorld do
     Map.put(search_params, :queries, executed_queries)
   end
 
-  defp get_offers(%Req.Response{body: body}) do
+  defp get_offers(%Req.Response{body: body}) when is_map(body) do
     Map.get(body, "offers", [])
   end
 
