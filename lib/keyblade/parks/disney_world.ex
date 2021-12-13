@@ -33,6 +33,8 @@ defmodule Keyblade.Parks.DisneyWorld do
       Enum.filter(executed_queries, fn query -> query.reservation_times != [] end)
 
     if queries_with_reservation_times != [] do
+      Logger.info(queries_with_reservation_times)
+
       queries_with_reservation_times
       |> build_sms_message(restaurant_name)
       |> Keyblade.SMS.send(notify_number)
