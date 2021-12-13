@@ -44,15 +44,16 @@ defmodule Keyblade.Parks.DisneyWorld do
       executed_queries
       |> Stream.flat_map(&Map.get(&1, :reservation_times))
       |> Stream.map(&reservation_time_to_string/1)
+      |> Stream.uniq()
       |> Enum.join("\n")
 
-    "🚨DISNEY RESERVATION ALERT🚨 - #{restaurant_name}\n\n#{reservation_times_string}"
+    "DISNEY RESERVATION ALERT - #{restaurant_name}\n\n#{reservation_times_string}"
   end
 
   def reservation_time_to_string(%ReservationTime{datetime: datetime, party_size: party_size}) do
     date = Timex.format!(datetime, "%F", :strftime)
     {hour, time_of_day} = Timex.Time.to_12hour_clock(datetime.hour)
-    "📅 #{date} @ #{hour}:#{datetime.minute} #{time_of_day} - Party of #{party_size}"
+    "#{date} @ #{hour}:#{datetime.minute} #{time_of_day} - Party of #{party_size}"
   end
 
   defp run_queries(%SearchParams{queries: queries} = search_params) do

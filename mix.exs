@@ -16,7 +16,7 @@ defmodule Keyblade.MixProject do
     [
       mod: {Keyblade.Application, []},
       applications: [:req, :timex, :sms_blitz],
-      extra_applications: [:logger]
+      extra_applications: [:logger, :poison]
     ]
   end
 
