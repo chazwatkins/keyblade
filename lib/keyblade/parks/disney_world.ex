@@ -107,7 +107,7 @@ defmodule Keyblade.Parks.DisneyWorld do
 
     ReservationTime.new(%{
       datetime: datetime,
-      part_size: party_size
+      party_size: party_size
     })
   end
 
