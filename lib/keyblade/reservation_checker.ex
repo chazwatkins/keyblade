@@ -4,6 +4,8 @@ defmodule Keyblade.ReservationChecker do
 
   alias Keyblade.Parks.DisneyWorld
   alias Keyblade.Reservations.SearchParams
+  alias Keyblade.Accounts
+  alias Keyblade.Entities
 
   def start_link(search_params) do
     GenServer.start_link(__MODULE__, search_params)
@@ -22,14 +24,15 @@ defmodule Keyblade.ReservationChecker do
       |> Map.put(:queries, [])
       |> Map.put(:reservation_times, [])
 
-    Logger.info(
-      "Checking reservations for #{search_params.restaurant_name} - User: #{search_params.notify_number}"
-    )
+    user = Accounts.get_user_by_id(search_params.user_id)
+    restaurant = Entities.get_restaurant_by_id(search_params.restaurant_id)
 
-    Keyblade.check_for_available_reservations(%DisneyWorld{}, search_params)
+    Logger.info("Checking reservations for #{restaurant.name} - User: #{user.phone_number}")
+
+    Keyblade.check_for_available_reservations(%DisneyWorld{}, search_params, restaurant, user)
 
     Logger.info(
-      "Finished checking reservations for #{search_params.restaurant_name} - User: #{search_params.notify_number}"
+      "Finished checking reservations for #{restaurant.name} - User: #{user.phone_number}"
     )
 
     schedule_work(search_params)
@@ -37,14 +40,8 @@ defmodule Keyblade.ReservationChecker do
   end
 
   def schedule_work(%SearchParams{
-        interval: interval,
-        restaurant_name: restaurant_name,
-        notify_number: notify_number
+        interval: interval
       }) do
-    Logger.info(
-      "Next reservation check scheduled for #{restaurant_name} - User: #{notify_number}"
-    )
-
     next_interval_timer = apply(:timer, interval.measure, [interval.length])
     Process.send_after(self(), :check_reservations, next_interval_timer)
   end

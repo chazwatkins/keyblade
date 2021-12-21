@@ -10,25 +10,29 @@ defmodule Keyblade.Parks.DisneyWorld do
   alias Keyblade.Parks.Query
   alias Keyblade.Reservations.SearchParams
   alias Keyblade.Reservations.ReservationTime
+  alias Keyblade.Accounts.User
+  alias Keyblade.Entities.Restaurant
 
   defimpl Keyblade.Parks do
-    def check_for_available_reservations(_provider, search_params) do
-      DisneyWorld.check_for_available_reservations(search_params)
+    def check_for_available_reservations(_provider, search_params, restaurant, user) do
+      DisneyWorld.check_for_available_reservations(search_params, restaurant, user)
     end
   end
 
-  def check_for_available_reservations(%SearchParams{} = search_params) do
+  def check_for_available_reservations(%SearchParams{} = search_params, restaurant, user) do
     search_params
-    |> build_queries()
+    |> build_queries(restaurant)
     |> run_queries()
-    |> maybe_send_notification()
+    |> maybe_send_notification(restaurant, user)
   end
 
-  def maybe_send_notification(%SearchParams{
-        queries: executed_queries,
-        restaurant_name: restaurant_name,
-        notify_number: notify_number
-      }) do
+  def maybe_send_notification(
+        %SearchParams{
+          queries: executed_queries
+        },
+        %Restaurant{name: restaurant_name},
+        %User{phone_number: phone_number}
+      ) do
     queries_with_reservation_times =
       Enum.filter(executed_queries, fn query -> query.reservation_times != [] end)
 
@@ -37,7 +41,7 @@ defmodule Keyblade.Parks.DisneyWorld do
 
       queries_with_reservation_times
       |> build_sms_message(restaurant_name)
-      |> Keyblade.SMS.send(notify_number)
+      |> Keyblade.SMS.send(phone_number)
     end
   end
 
@@ -111,8 +115,11 @@ defmodule Keyblade.Parks.DisneyWorld do
     })
   end
 
-  def build_queries(%SearchParams{} = search_params) do
-    Logger.info("Building queries for restaurant #{search_params.restaurant_id}")
+  def build_queries(%SearchParams{} = search_params, %Restaurant{
+        id: restaurant_id,
+        name: restaurant_name
+      }) do
+    Logger.info("Building queries for restaurant #{restaurant_name}")
     date_range = Date.range(search_params.start_date, search_params.end_date)
     party_range = search_params.party_size_min..search_params.party_size_max
 
@@ -130,7 +137,7 @@ defmodule Keyblade.Parks.DisneyWorld do
       for time <- time_interval do
         query =
           Query.new(%{
-            restaurant_id: search_params.restaurant_id,
+            restaurant_id: restaurant_id,
             party_size: party_size,
             date: Date.to_string(date),
             time: Timex.format!(time, "%H:%M:%S", :strftime)

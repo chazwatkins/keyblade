@@ -8,11 +8,10 @@ defmodule Keyblade.Reservations.SearchParams do
     :party_size_max,
     :restaurant_id,
     :interval,
-    :notify_number
+    :user_id
   ]
 
   @optional_fields [
-    :restaurant_name,
     queries: []
   ]
 
