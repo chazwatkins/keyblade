@@ -27,12 +27,14 @@ defmodule Keyblade.ReservationChecker do
     user = Accounts.get_user_by_id(search_params.user_id)
     restaurant = Entities.get_restaurant_by_id(search_params.restaurant_id)
 
-    Logger.info("Checking reservations for #{restaurant.name} - User: #{user.phone_number}")
+    Logger.info(
+      "Checking reservations for #{restaurant.name} - User: #{user.name} #{user.phone_number}"
+    )
 
     Keyblade.check_for_available_reservations(%DisneyWorld{}, search_params, restaurant, user)
 
     Logger.info(
-      "Finished checking reservations for #{restaurant.name} - User: #{user.phone_number}"
+      "Finished checking reservations for #{restaurant.name} - User: #{user.name} #{user.phone_number}"
     )
 
     schedule_work(search_params)
