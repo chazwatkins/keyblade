@@ -26,3 +26,5 @@ keyblade-*.tar
 /tmp/
 
 .env
+
+/config/runtime.exs
