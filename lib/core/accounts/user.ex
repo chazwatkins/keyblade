@@ -1,4 +1,4 @@
-defmodule Keyblade.Accounts.User do
+defmodule Keyblade.Core.Accounts.User do
   @required_fields [:id, :name, :phone_number]
   @optional_fields []
 

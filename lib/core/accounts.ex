@@ -1,5 +1,5 @@
-defmodule Keyblade.Accounts do
-  alias Keyblade.Accounts.User
+defmodule Keyblade.Core.Accounts do
+  alias Keyblade.Core.Accounts.User
 
   def list_users do
     config_users = Application.get_env(:keyblade, :users, [])

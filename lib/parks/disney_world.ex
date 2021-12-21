@@ -7,11 +7,14 @@ defmodule Keyblade.Parks.DisneyWorld do
   @timeout 30_000
 
   alias __MODULE__
-  alias Keyblade.Parks.Query
-  alias Keyblade.Reservations.SearchParams
-  alias Keyblade.Reservations.ReservationTime
-  alias Keyblade.Accounts.User
-  alias Keyblade.Entities.Restaurant
+
+  alias Keyblade.Core.{
+    Reservations.SearchParams,
+    Reservations.ReservationTime,
+    Reservations.Query,
+    Accounts.User,
+    Entities.Restaurant
+  }
 
   defimpl Keyblade.Parks do
     def check_for_available_reservations(_provider, search_params, restaurant, user) do

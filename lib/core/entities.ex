@@ -1,5 +1,5 @@
-defmodule Keyblade.Entities do
-  alias Keyblade.Entities.{Entity, Restaurant}
+defmodule Keyblade.Core.Entities do
+  alias Keyblade.Core.Entities.{Entity, Restaurant}
 
   def list_restaurants do
     config_restaurants = Application.get_env(:keyblade, :entities, [])

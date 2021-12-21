@@ -1,4 +1,4 @@
-defmodule Keyblade.Parks.Query do
+defmodule Keyblade.Core.Reservations.Query do
   @required_fields [
     :restaurant_id,
     :party_size,

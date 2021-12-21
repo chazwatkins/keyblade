@@ -1,4 +1,4 @@
-defmodule Keyblade.Reservation do
+defmodule Keyblade.Core.Reservations.Reservation do
   @required_fields [:datetime]
   @optional_fields []
 

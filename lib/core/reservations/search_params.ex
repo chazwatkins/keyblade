@@ -1,4 +1,4 @@
-defmodule Keyblade.Reservations.SearchParams do
+defmodule Keyblade.Core.Reservations.SearchParams do
   @required_fields [
     :start_date,
     :end_date,

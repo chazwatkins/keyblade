@@ -1,4 +1,4 @@
-defmodule Keyblade.Entities.Entity do
+defmodule Keyblade.Core.Entities.Entity do
   @required_fields [:id, :name, :type]
   @optional_fields []
 

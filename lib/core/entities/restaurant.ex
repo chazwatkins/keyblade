@@ -1,5 +1,5 @@
-defmodule Keyblade.Entities.Restaurant do
-  alias Keyblade.Entities.Entity
+defmodule Keyblade.Core.Entities.Restaurant do
+  alias Keyblade.Core.Entities.Entity
 
   @required_fields [:id, :name]
   @optional_fields []

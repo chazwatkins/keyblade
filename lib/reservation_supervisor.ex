@@ -1,7 +1,7 @@
 defmodule Keyblade.ReservationSupervisor do
   use Supervisor
 
-  alias Keyblade.Reservations.SearchParams
+  alias Keyblade.Core.Reservations.SearchParams
 
   def start_link(init_arg) do
     Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)

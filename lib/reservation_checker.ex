@@ -3,9 +3,12 @@ defmodule Keyblade.ReservationChecker do
   require Logger
 
   alias Keyblade.Parks.DisneyWorld
-  alias Keyblade.Reservations.SearchParams
-  alias Keyblade.Accounts
-  alias Keyblade.Entities
+
+  alias Keyblade.Core.{
+    Reservations.SearchParams,
+    Accounts,
+    Entities
+  }
 
   def start_link(search_params) do
     GenServer.start_link(__MODULE__, search_params)

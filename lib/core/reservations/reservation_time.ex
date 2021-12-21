@@ -1,4 +1,4 @@
-defmodule Keyblade.Reservations.ReservationTime do
+defmodule Keyblade.Core.Reservations.ReservationTime do
   @required_fields [
     :datetime,
     :party_size
